@@ -1,19 +1,22 @@
 #!/bin/bash
 #SBATCH -n 1
 #SBATCH -p batch
-#SBATCH --cpus-per-task=2
-#SBATCH --mem=32G
-#SBATCH --time=1:00:00
+#SBATCH --cpus-per-task=32
+#SBATCH --mem=64G
+#SBATCH --time=10:00:00
 #SBATCH --output ./logs/alignment-%j.log
 
-module load python/3.7.4
-
-export PYTHONUNBUFFERED=TRUE
-export PYTHONPATH=./:$PYTHONPATH
-
-cd ~/Repos/ecmo-rnaseq/StarRunDir
+cd /gpfs/data/ceickhof/ECMO_RNASeq/aligned
 
 /users/isears1/Repos/STAR/source/STAR --version
-/users/isears1/Repos/STAR/source/STAR --runThreadN 2 --genomeDir /gpfs/data/shared/databases/refchef_refs/grch38_release98/STAR_2_7_10a --readFilesIn ../sampledata/sample.fastq
 
-echo 'Alignment completed'
+commaSepFnames=`ls /gpfs/data/ceickhof/ECMO_RNASeq/30-573159527/00_fastq/*.gz | paste -s -d,`
+
+/users/isears1/Repos/STAR/source/STAR \
+    --runThreadN 32 \
+    --genomeDir /gpfs/data/shared/databases/refchef_refs/grch38_release98/STAR_2_7_10a \
+    --readFilesIn $commaSepFnames \
+    --readFilesCommand "gunzip -c"
+    / 
+
+echo '[+] Alignment completed'
