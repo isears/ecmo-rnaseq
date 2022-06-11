@@ -10,12 +10,13 @@ cd /gpfs/data/ceickhof/ECMO_RNASeq/aligned
 
 /users/isears1/Repos/STAR/source/STAR --version
 
-commaSepFnames=`ls /gpfs/data/ceickhof/ECMO_RNASeq/30-573159527/00_fastq/*.gz | paste -s -d,`
+r1_names=`ls /gpfs/data/ceickhof/ECMO_RNASeq/30-573159527/00_fastq/*R1_001.fastq.gz | paste -s -d,`
+r2_names=`ls /gpfs/data/ceickhof/ECMO_RNASeq/30-573159527/00_fastq/*R2_001.fastq.gz | paste -s -d,`
 
 /users/isears1/Repos/STAR/source/STAR \
     --runThreadN 32 \
     --genomeDir /gpfs/data/shared/databases/refchef_refs/grch38_release98/STAR_2_7_10a \
-    --readFilesIn $commaSepFnames \
+    --readFilesIn $r1_names $r2_names \
     --readFilesCommand "gunzip -c"
     / 
 
