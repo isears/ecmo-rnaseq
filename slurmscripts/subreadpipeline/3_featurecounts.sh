@@ -2,8 +2,8 @@
 #SBATCH -n 1
 #SBATCH -p batch
 #SBATCH --cpus-per-task=32
-#SBATCH --mem=32G
-#SBATCH --time=7:00:00
+#SBATCH --mem=8G
+#SBATCH --time=00:15:00
 #SBATCH --output /gpfs/home/isears1/Repos/ecmo-rnaseq/logs/subread-%j.log
 
 module load subread
