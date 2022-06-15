@@ -3,7 +3,6 @@ import seaborn as sns
 import numpy as np
 import pandas as pd
 
-# TODO: need to normalize!!
 
 if __name__ == "__main__":
     mc = pd.read_csv(

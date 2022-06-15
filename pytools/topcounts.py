@@ -5,6 +5,7 @@ import os
 
 if __name__ == "__main__":
     mg = mygene.MyGeneInfo()
+    mg.set_caching(cache_db="/gpfs/home/isears1/scratch/mygenecache")
     data_path = "/gpfs/home/isears1/Repos/ecmo-rnaseq/outputs/subread/"
 
     for item in os.listdir(data_path):
@@ -19,4 +20,11 @@ if __name__ == "__main__":
             top_10["Name"] = top_10.apply(
                 lambda row: mg.getgene(row["Geneid"], fields="name")["name"], axis=1
             )
-            print(top_10[["Name", "Count"]])
+
+            top_10["Symbol"] = top_10.apply(
+                lambda row: mg.getgene(row["Geneid"], fields="symbol")["symbol"], axis=1
+            )
+
+            print(top_10[["Geneid", "Symbol", "Name", "Count"]])
+
+            top_10.to_csv(f"reports/top10_{item}.csv", index=False)
