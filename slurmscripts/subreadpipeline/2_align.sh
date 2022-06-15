@@ -22,11 +22,12 @@ for fname in /gpfs/data/ceickhof/ECMO_RNASeq/30-573159527/00_fastq/*R1_001.fastq
     # -T number of cores
     # -d minimum length
     subread-align \
+        --SAMoutput \
         -i /gpfs/scratch/isears1/rnaseq_outputs/subread/grch38_release98 \
         -r $fname \
         -R $paired_fname \
         -t 0 \
-        -o /gpfs/scratch/isears1/rnaseq_outputs/subread/$id/alignment.bam \
+        -o /gpfs/scratch/isears1/rnaseq_outputs/subread/$id/alignment.sam \
         -T 32 \
         -d 20 \
         -a /gpfs/data/shared/databases/refchef_refs/grch38_release98/gtf/Homo_sapiens.GRCh38.98.gtf
