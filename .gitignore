@@ -4,3 +4,4 @@
 /outputs
 /sampledata
 /reports
+**/__pycache__/
