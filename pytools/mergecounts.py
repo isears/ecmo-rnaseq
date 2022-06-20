@@ -64,10 +64,11 @@ if __name__ == "__main__":
     print("[*] Summing / norming and saving...")
     merged_counts["TotalCount"] = merged_counts[count_cols].sum(axis=1)
 
+    # Counts per million (CPM) scaling
     for count_col in count_cols:
         s = merged_counts[count_col].sum()
-        merged_counts[f"Normalized_{count_col}"] = merged_counts[count_col].apply(
-            lambda x: x / s
+        merged_counts[f"CPM_{count_col}"] = merged_counts[count_col].apply(
+            lambda x: x / (s / 1e6)
         )
 
     merged_counts.to_csv(f"{data_path}/mergedcounts.csv", index=False)

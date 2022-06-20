@@ -1,26 +1,29 @@
 from sklearn.decomposition import PCA
+from pca2d import prep_for_pca
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-
-def prep_for_pca():
-    mc = pd.read_csv(
-        "/gpfs/home/isears1/Repos/ecmo-rnaseq/outputs/subread/mergedcounts.csv"
-    )
-
-    kept_cols = [col for col in mc.columns if "CPM_" in col]
-
-    # x axis: gene expression lvls (counts per million)
-    # y axis: patients
-    mc = mc.set_index("Geneid")
-    mc = mc[kept_cols]
-    mc = mc.T
-    return mc, kept_cols
-
+top_10_stroke_genes = [
+    # Down expressed, by p-value smallest to largest
+    "ENSG00000077348",
+    "ENSG00000104980",
+    "ENSG00000189046",
+    "ENSG00000117318",
+    "ENSG00000007312",
+    "ENSG00000154016",
+    "ENSG00000140545",
+    "ENSG00000215788",
+    # Up expressed, by p-value smallest to largest
+    "ENSG00000118520",
+    "ENSG00000138411",
+]
 
 if __name__ == "__main__":
     mc, labels = prep_for_pca()
+
+    # Filter down to only stroke-related genes
+    mc = mc.filter(items=top_10_stroke_genes)
     print(f"Original shape: {mc.values.shape}")
 
     pca = PCA(n_components=2, random_state=42)
@@ -42,4 +45,4 @@ if __name__ == "__main__":
         # ax.text(mc_pca[idx, 0], mc_pca[idx, 1], mc_pca[idx, 2], label, None)
 
     ax.figure.tight_layout()
-    plt.savefig("reports/pca2d_scatter.png")
+    plt.savefig("reports/stroke_pca2d_scatter.png")
