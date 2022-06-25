@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
 
 
 top_10_stroke_genes = [
@@ -50,5 +51,7 @@ if __name__ == "__main__":
         groupings.loc[group_num]["Members"].append(id)
 
     print(groupings)
+    sscore = silhouette_score(mc, kmeans.labels_)
+    print(f"Silhouette score: {sscore}")
 
     groupings.to_csv("reports/stroke_kmeans.csv", index=False)
