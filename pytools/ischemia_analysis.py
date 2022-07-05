@@ -48,7 +48,7 @@ if __name__ == "__main__":
         sample = ischemia_cpm[col_name].values
         others = ischemia_cpm[[c for c in cpm_cols if c != col_name]].values
 
-        euclid_distance = distance.euclidean(sample, others.mean(axis=1))
+        euclid_distance = distance.euclidean(sample, np.median(others, axis=1))
 
         distances[id] = euclid_distance
 
