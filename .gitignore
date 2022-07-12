@@ -1,5 +1,7 @@
 /data
-/logs
+**/logs/
+**/.nextflow/
+**/work/
 /StarRunDir
 /outputs
 /sampledata
