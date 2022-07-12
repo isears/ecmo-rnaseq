@@ -5,3 +5,6 @@
 /sampledata
 /reports
 **/__pycache__/
+/.nextflow
+.nextflow.log
+/work
