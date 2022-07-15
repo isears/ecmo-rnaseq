@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt  # To reset the plot on loop
 
 from scipy.stats import ttest_ind
+from statsmodels.stats.multitest import fdrcorrection
 
 
 def augment(col: str, pos_str: str = "Yes", neg_str: str = "No"):
@@ -32,8 +33,8 @@ def augment(col: str, pos_str: str = "Yes", neg_str: str = "No"):
         return pval
 
     mc["pval"] = mc.apply(get_pval, axis=1)
+    _, mc["fdrcorrected_pval"] = fdrcorrection(mc["pval"], alpha=0.05)
 
-    # TODO: Bonferonni threshold
     mc.to_csv("outputs/dartmouthpipeline/mergedcounts_augmented.csv")
     return mc
 
@@ -52,26 +53,25 @@ def make_plot(outcome: str):
     mc_clean = mc_clean[~mc_clean["log2fold"].isna()]
 
     # TODO: this is a HACK
-    mc_clean["log2fold"] = mc_clean["log2fold"].replace({np.inf: 8, -np.inf: -8})
+    # mc_clean["log2fold"] = mc_clean["log2fold"].replace({np.inf: 8, -np.inf: -8})
 
-    bonferonni_threshold = -1 * np.log10(0.05 / len(mc))
+    # bonferonni_threshold = -1 * np.log10(0.05 / len(mc))
 
-    labels_df = mc_clean.nsmallest(10, columns="pval")
+    labels_df = mc_clean.nsmallest(10, columns="fdrcorrected_pval")
     # labels_df.apply(
     #     lambda row: plt.annotate(
     #         row["Geneid"], (row["log2fold"], -1 * np.log10(row["pval"])), fontsize=5
     #     ),
     #     axis=1,
     # )
-    plt.scatter(mc_clean["log2fold"], -1 * np.log10(mc_clean["pval"]), s=1)
+    plt.scatter(mc_clean["log2fold"], -1 * np.log10(mc_clean["fdrcorrected_pval"]), s=1)
     plt.xlabel("Log2 Fold Change")
     plt.ylabel("-Log10(p_value)")
     plt.title(outcome)
-    plt.axhline(y=bonferonni_threshold, color="r", linestyle="dotted")
+    plt.axhline(y=-1 * np.log10(0.05), color="r", linestyle="dotted")
     plt.savefig(f"reports/volcano_{outcome.replace(' ', '_')}.png")
     plt.clf()  # Clear after save in case running in loop
 
-    print(f"Bonferonni Threshold: {bonferonni_threshold:.5f}")
     print(f"Top 10 by p value for {outcome}:")
     print(labels_df[["Geneid", "Symbol", "log2fold", "pval"]])
     labels_df[["Geneid", "Symbol", "log2fold", "pval"]].to_csv(
