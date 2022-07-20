@@ -11,3 +11,5 @@
 .nextflow.log
 /work
 ugp.txt
+.RData
+.Rhistory

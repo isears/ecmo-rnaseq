@@ -1,0 +1,5 @@
+Bioconductor not available for old R in OSCAR, use biolite:
+    - source("https://bioconductor.org/biocLite.R")
+    - biocLite("some-class-here" )
+
+Check lib paths: .libPaths()
